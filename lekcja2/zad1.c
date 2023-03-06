@@ -11,21 +11,42 @@
 // for n = 1 return one-element array, with array[0] = start
 void linspace(double array[], double start, double stop, int n)
 {
+    double step = (stop - start) / (n - 1);
+    double actual_sum = start;
+    for (int i = 0; i < n; i++)
+    {
+        array[i] = actual_sum;
+        actual_sum += step;
+    }
 }
 
 // Multiply each element of v by the value of scalar
 void multiply_by_scalar(double v[], int n, double scalar)
 {
+    for (int i = 0; i < n; i++)
+    {
+        v[i] *= scalar;
+    }
 }
 
 // Add to each element v1[i] value of v2[i]
 void add(double v1[], const double v2[], int n)
 {
+    for (int i = 0; i < n; i++)
+    {
+        v1[i] += v2[i];
+    }
 }
 
 // Calculate and return the dot product of v1 and v2
 double dot_product(const double v1[], const double v2[], int n)
 {
+    double dot_prod = 0;
+    for (int i = 0; i < n; i++)
+    {
+        dot_prod += v1[i] * v2[i];
+    }
+    return dot_prod;
 }
 
 // Generates the sequence of n samples by incrementing the start value
@@ -35,6 +56,11 @@ double dot_product(const double v1[], const double v2[], int n)
 // for n = 1 return one-element array, with array[0] = start
 void range(double array[], double start, double step, int n)
 {
+    for (int i = 0; i < n; i++)
+    {
+        array[i] = start;
+        start += step;
+    }
 }
 
 // read double vector of size n
