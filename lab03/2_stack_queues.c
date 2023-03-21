@@ -21,60 +21,42 @@ void cbuff_print(void);
 
 ///////////////////////
 
-int main(void)
-{
+int main(void) {
     int to_do, i, n, ans;
     int nr_klienta, kod_operacji;
     double x, f_ans;
-    if (TEST)
-        printf("Nr testu = ");
+    if (TEST) printf("Nr testu = ");
     scanf("%d", &to_do);
-    switch (to_do)
-    {
+    switch (to_do) {
     case 1:
-        if (TEST)
-            printf("sekwencja operacji (w jednej linii, oddzielone spacjami):\n"); // 0 podaje stan stosu i konczy sekwencje operacji
-        do
-        {
+        if (TEST) printf("sekwencja operacji (w jednej linii, oddzielone spacjami):\n"); // 0 podaje stan stosu i konczy sekwencje operacji
+        do {
             scanf("%lf", &x);
-            if (x > 0)
-            {
+            if (x > 0) {
                 f_ans = stack_push(x);
-                if (f_ans == INFINITY)
-                    printf("%f ", INFINITY);
+                if (f_ans == INFINITY) printf("%f ", INFINITY);
             }
-            else
-            {
-                if (x < 0)
-                    printf("%.2f ", stack_pop());
-                else
-                    printf("\n%d\n", stack_state());
+            else {
+                if (x < 0) printf("%.2f ", stack_pop());
+                else printf("\n%d\n", stack_state());
             }
         } while (x != 0.0);
         break;
     case 2:
         //  kolejka kolejnych liczb naturlnych > 0 (naplywajacych grupowo) - implementacja w tablicy z przesunieciami
-        if (TEST)
-            printf("we/wy do/z kolejki (w jednej linii, oddzielone spacjami):\n"); // 0 podaje stan kolejki i konczy symulacje kolejki
-        do
-        {
+        if (TEST) printf("we/wy do/z kolejki (w jednej linii, oddzielone spacjami):\n"); // 0 podaje stan kolejki i konczy symulacje kolejki
+        do {
             scanf("%d", &n);
-            if (n > 0)
-            {
+            if (n > 0) {
                 f_ans = queue_push(n);
-                if (f_ans == INFINITY)
-                    printf("%f ", INFINITY);
+                if (f_ans == INFINITY) printf("%f ", INFINITY);
             }
-            else
-            {
-                if (n < 0)
-                {
+            else {
+                if (n < 0) {
                     ans = queue_pop(-n);
-                    if (ans < 0)
-                        printf("-1 ");
+                    if (ans < 0) printf("-1 ");
                 }
-                else
-                {
+                else {
                     printf("\n%d\n", queue_state());
                     queue_print();
                 }
@@ -83,29 +65,22 @@ int main(void)
         break;
     case 3:
         //  kolejka kolejnych liczb naturalnych > 0 (naplywajacych pojedynczo - implementacja w buforze cyklicznym
-        if (TEST)
-            printf("we/wy do/z kolejki (w jednej linii, oddzielone spacjami):\n"); // 0 podaje stan kolejki i konczy symulacje kolejki
+        if (TEST) printf("we/wy do/z kolejki (w jednej linii, oddzielone spacjami):\n"); // 0 podaje stan kolejki i konczy symulacje kolejki
         nr_klienta = 0;
-        do
-        {
+        do {
             scanf("%d", &kod_operacji);
-            if (kod_operacji > 0)
-            {
+            if (kod_operacji > 0) {
                 f_ans = cbuff_push(++nr_klienta);
-                if (f_ans == INFINITY)
-                    printf("%f ", INFINITY);
+                if (f_ans == INFINITY) printf("%f ", INFINITY);
             }
-            else
-            {
-                if (kod_operacji < 0)
-                {
+            else {
+                if (kod_operacji < 0) {
                     printf("%d ", cbuff_pop());
-                    //                    ans = cbuff_pop();
-                    //                    if(ans < 0) printf("%f ",NAN);
-                    //                    else        printf("%d ",ans);
+                    // ans = cbuff_pop();
+                    // if(ans < 0) printf("%f ",NAN);
+                    // else printf("%d ",ans);
                 }
-                else
-                {
+                else {
                     printf("\n%d\n", cbuff_state());
                     cbuff_print();
                 }
@@ -113,8 +88,7 @@ int main(void)
         } while (kod_operacji != 0);
         break;
     default:
-        if (TEST)
-            printf("NOTHING TO DO!\n");
+        if (TEST) printf("NOTHING TO DO!\n");
     }
     return 0;
 }
@@ -130,80 +104,63 @@ int main(void)
 double stack[STACK_SIZE];
 int top = 0; // jawne zerowanie nie jest konieczne
 
-double stack_push(double x)
-{
+double stack_push(double x) {
     if (top == STACK_SIZE)
     {
         return INFINITY;
     }
-    else
-    {
+    else {
         stack[top] = x;
         top += 1;
         return 0;
     }
 }
 
-double stack_pop(void)
-{
-    if (top == 0)
-    {
+double stack_pop(void) {
+    if (top == 0) {
         return NAN;
     }
-    else
-    {
+    else {
         top -= 1;
         return stack[top];
     }
 }
 
-int stack_state(void)
-{
+int stack_state(void) {
     return top;
 }
 
 // Kolejka z przesuwaniem w tablicy
 
 #define QUEUE_SIZE 10
-
 int queue[QUEUE_SIZE];
 int in = 0, curr_nr = 0; // 1. klient dostanie nr = 1
 
-double queue_push(int how_many)
-{
-    for (int i = 0; i < how_many; i++)
-    {
+double queue_push(int how_many) {
+    for (int i = 0; i < how_many; i++) {
         curr_nr += 1;
-        if (in < QUEUE_SIZE)
-        {
+        if (in < QUEUE_SIZE) {
             queue[in] = curr_nr;
             in += 1;
         }
     }
 
-    if (queue[in - 1] != curr_nr)
-    {
+    if (queue[in - 1] != curr_nr) {
         return INFINITY;
     }
-    else
-    {
+    else {
         return 0;
     }
 }
 
-int queue_pop(int how_many)
-{
-    if (how_many > in)
-    {
+int queue_pop(int how_many) {
+    if (how_many > in) {
         in = 0;
         return -1;
     }
-    else
-    {
-        for (int i = 0; i < how_many; i++)
-        {
-            for (int j = 0; j < in; j++)
-            {
+    else {
+        for (int i = 0; i < how_many; i++) {
+            for (int j = 0; j < in; j++) {
                 queue[j] = queue[j + 1];
             }
             in -= 1;
@@ -212,15 +169,12 @@ int queue_pop(int how_many)
     }
 }
 
-int queue_state(void)
-{
+int queue_state(void) {
     return in;
 }
 
-void queue_print(void)
-{
-    for (int i = 0; i < in; i++)
-    {
+void queue_print(void) {
+    for (int i = 0; i < in; i++) {
         printf("%i ", queue[i]);
     }
     printf("\n");
@@ -233,14 +187,11 @@ void queue_print(void)
 int cbuff[CBUFF_SIZE];
 int out = 0, len = 0;
 
-double cbuff_push(int cli_nr)
-{
-    if (len + 1 > CBUFF_SIZE)
-    {
+double cbuff_push(int cli_nr) {
+    if (len + 1 > CBUFF_SIZE) {
         return INFINITY;
     }
-    else
-    {
+    else {
         int next_id = (out + len) % CBUFF_SIZE;
         cbuff[next_id] = cli_nr;
         len++;
@@ -248,14 +199,11 @@ double cbuff_push(int cli_nr)
     }
 }
 
-int cbuff_pop(void)
-{
-    if (len <= 0)
-    {
+int cbuff_pop(void) {
+    if (len <= 0) {
         return -1;
     }
-    else
-    {
+    else {
         int old = cbuff[out];
         out = (out + 1) % CBUFF_SIZE;
         len--;
@@ -263,15 +211,12 @@ int cbuff_pop(void)
     }
 }
 
-int cbuff_state(void)
-{
+int cbuff_state(void) {
     return len;
 }
 
-void cbuff_print(void)
-{
-    for (int i = 0; i < len; i++)
-    {
+void cbuff_print(void) {
+    for (int i = 0; i < len; i++) {
         printf("%i ", cbuff[(out + i) % CBUFF_SIZE]);
     }
 }
