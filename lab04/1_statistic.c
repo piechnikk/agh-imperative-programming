@@ -56,11 +56,15 @@ void cum_discret_distrib(double distrib[], size_t n) {
 // y_scale - wartość zmiennej zależnej odpowiadającej szerokości jednego znaku na wykresie,
 void print_histogram(const double tab[], size_t n, int x_start, double y_scale, char mark) {
     for (int i = 0; i < n; i++) {
-        printf("%i|", x_start + i);
-        for (int j = 0; j < tab[i] / y_scale; j++) {
+        if (i < 10 - x_start) {
+            printf(" ");
+        }
+        printf("%i |", x_start + i);
+        int number_of_marks = round(tab[i] / y_scale);
+        for (int j = 0; j < number_of_marks; j++) {
             printf("%c", mark);
         }
-        printf("%f\n", tab[i]);
+        printf(" %.3f\n", tab[i]);
     }
 
     // printf("%lu\n%i\n%lf\n%c", n, x_start, y_scale, mark);
@@ -77,6 +81,16 @@ void print_histogram(const double tab[], size_t n, int x_start, double y_scale, 
 //            Pierwsze losowanie: nr drzwi, za którymi jest nagroda.
 //            Drugie losowanie: nr drzwi w pierwszym wyborze gracza.
 void monty_hall(int* p_switch_wins, int* p_nonswitch_wins, int n) {
+    for (int i = 0; i < n; i++) {
+        int winning_number = rand() % 3;
+        int player_number = rand() % 3;
+        if (player_number == winning_number) {
+            *p_nonswitch_wins += 1;
+        }
+        if (player_number != winning_number) {
+            *p_switch_wins += 1;
+        }
+    }
 }
 
 // read double vector of size n
