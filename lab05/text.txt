@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <math.h>
+#define N 100
+/*
+// Generates the sequence of n samples by incrementing the start value
+// using the step size (|step| > 1.e-5).
+// 0 <= n <= N
+// for n = 0 return empty array
+// for n = 1 return one-element array, with array[0] = start
+void range(double array[], double start, double step, int n) {
+	for(int i=0; i<n; start+=step) {
+		array[i++] = start;
+	}
+	return;
+}
+*/
+
+// Returns n evenly spaced samples, calculated over the interval [start, stop].
+// 0 <= n <= N
+// for n = 0 return empty array
+// for n = 1 return one-element array, with array[0] = start
+void linspace(double array[], double start, double stop, int n) {
+	if (n == 0) return;
+	if (n == 1) {
+		array[0] = start;
+		return;
+	}
+	double step = (stop - start) / (n - 1);
+	double x = start;
+	for (int i = 0; i < n; ++i) {
+		array[i] = x;
+		x += step;
+	}
+}
+
+// Multiply each element of v by the value of scalar
+void multiply_by_scalar(double v[], int n, double scalar) {
+	for (int i = 0; i < n; ++i) {
+		v[i] *= scalar;
+	}
