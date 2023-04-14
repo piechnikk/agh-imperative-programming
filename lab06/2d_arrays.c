@@ -14,28 +14,94 @@
 
 // n lancuchów wskazywanych w tablicy wskaznikow ptab kopiuje do tablicy tablic t2D   
 void n_str_copy(char t2D[][STRLEN_MAX], char* ptab[], size_t n) {
+  for (size_t i = 0; i < n; i++) {
+    int j = 0;
+    while (*(ptab[i] + j) != '\0') {
+      t2D[i][j] = *(ptab[i] + j);
+      j++;
+    }
+  }
 }
 
-int compar(const void* p1, const void* p2) {
+int compar(char* p1, char* p2) { //p1>p2 => 1, p2>p1 => -1, p1==p2 =>0
+  int i = 0;
+  while (*(p1 + i) != '\0' && *(p2 + i) != '\0') {
+    if (*(p1 + i) == *(p2 + i)) {
+      i++;
+    }
+    else if (*(p1 + i) > *(p2 + i)) {
+      return 1;
+    }
+    else {
+      return -1;
+    }
+  }
+  return 0;
 }
 
 // sortuje alfabetycznie n lancuchow wskazywanych w tablicy wskaznikow t  
 void ptab_sort(char* ptab[], size_t n) {
+  //selection sort
+  for (int i = 0; i < n - 1; i++) {
+    int max_i = i;
+    for (int j = i + 1; j < n; j++) {
+      if (compar(ptab[j], ptab[max_i]) == -1) {
+        max_i = j;
+      }
+    }
+    //swap
+    char* helper = ptab[max_i];
+    ptab[max_i] = ptab[i];
+    ptab[i] = helper;
+  }
 }
 
 // Porzadek odwrotny do alfabetycznego lancuchow zapisanych w tablicy t2D zapisuje w tablicy indices
-void t2D_sort(const char t2D[][STRLEN_MAX], size_t indices[], size_t n) {
+void t2D_sort(char t2D[][STRLEN_MAX], size_t indices[], size_t n) {
+  for (size_t i = 0; i < n; i++) {
+    indices[i] = i;
+  }
+  //selection sort
+  for (int i = 0; i < n - 1; i++) {
+    int max_i = i;
+    for (int j = i + 1; j < n; j++) {
+      if (compar(&t2D[indices[j]], &t2D[indices[max_i]]) == 1) {
+        max_i = j;
+      }
+    }
+    //swap
+    int helper = indices[max_i];
+    indices[max_i] = indices[i];
+    indices[i] = helper;
+  }
 }
 
 // W wierszach tablicy t2D sa zapisane lancuchy znakowe w dowolnej kolejnosci.
 // Tablica indeksow wierszy indices wyznacza porzadek tych lancuchow.
 // Funkcja wypisuje w osobnych liniach łańcuchy wskazane przez n poczatkowych elementów tablicy indices.
 void print_t2D_ind(const char(*ptr)[STRLEN_MAX], const size_t* pindices, size_t n) {
-  //void print_t2D_ind(const char ptr[][STRLEN_MAX], const size_t indices[], size_t n) {
+  // void print_t2D_ind(const char ptr[][STRLEN_MAX], const size_t indices[], size_t n) {
+  for (size_t i = 0; i < n; i++) {
+    int j = 0;
+    while (ptr[pindices[i]][j] != '\0') {
+      printf("%c", ptr[pindices[i]][j]);
+      j++;
+    }
+    printf("\n");
+  }
+
 }
 
 // Funkcja wypisuje w osobnych liniach n łańcuchów wskazywanych przez elementy tablicy ptab.
 void print_ptab(char* ptab[], size_t n) {
+  for (size_t i = 0; i < n; i++) {
+    int j = 0;
+    while (*(ptab[i] + j) != '\0') {
+      printf("%c", *(ptab[i] + j));
+      j++;
+    }
+    printf("\n");
+  }
 }
 
 // 5.1.2
