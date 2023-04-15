@@ -38,6 +38,49 @@ void print_mat(const double A[][SIZE], size_t m, size_t n) {
 // to w wektorze x umieszcza rozwiazanie ukladu rownan Ax=b.
 
 double gauss(double A[][SIZE], const double b[], double x[], size_t n, double eps) {
+    double determinant = 1;
+    int rows_permutation_vector[n];
+    for (size_t i = 0; i < n; i++) {
+        rows_permutation_vector[i] = i;
+        x[i] = b[i];
+    }
+
+    for (size_t i = 0; i < n; i++) {
+        int indexof_actual_max = i;
+        for (size_t j = i + 1; j < n; j++) {
+            if (fabs(A[rows_permutation_vector[j]][i]) > fabs(A[rows_permutation_vector[indexof_actual_max]][i])) {
+                indexof_actual_max = j;
+            }
+        }
+        if (fabs(A[rows_permutation_vector[indexof_actual_max]][i]) < eps) return 0;
+        if (indexof_actual_max != i) {
+            int helper = rows_permutation_vector[i];
+            rows_permutation_vector[i] = rows_permutation_vector[indexof_actual_max];
+            rows_permutation_vector[indexof_actual_max] = helper;
+
+            double helper2 = x[rows_permutation_vector[i]];
+            x[rows_permutation_vector[i]] = x[i];
+            x[i] = helper2;
+
+            determinant *= -1;
+        }
+
+        for (size_t j = i + 1; j < n; j++) {
+            double row_multiplier = A[rows_permutation_vector[j]][i] / A[rows_permutation_vector[i]][i];
+            for (size_t k = i; k < n; k++) {
+                A[rows_permutation_vector[j]][k] -= A[rows_permutation_vector[i]][k] * row_multiplier;
+            }
+            x[j] -= x[i] * row_multiplier;
+        }
+        determinant *= A[rows_permutation_vector[i]][i];
+    }
+    for (int i = n - 1; i >= 0; i--) {
+        for (int j = n - 1; j > i; j--) {
+            x[i] -= A[rows_permutation_vector[i]][j] * x[j];
+        }
+        x[i] /= A[rows_permutation_vector[i]][i];
+    }
+    return determinant;
 }
 
 // 5.2.2
@@ -47,6 +90,62 @@ double gauss(double A[][SIZE], const double b[], double x[], size_t n, double ep
 // Funkcja zmienia wartosci takze w tablicy A.
 
 double matrix_inv(double A[][SIZE], double B[][SIZE], size_t n, double eps) {
+    double temp_B[n][n];
+    double determinant = 1;
+    int rows_permutation_vector[n];
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            temp_B[i][j] = 0;
+        }
+        temp_B[i][i] = 1;
+    }
+
+    for (size_t i = 0; i < n; i++) {
+        rows_permutation_vector[i] = i;
+    }
+    for (size_t i = 0; i < n; i++) {
+        int indexof_actual_max = i;
+        for (size_t j = i + 1; j < n; j++) {
+            if (fabs(A[rows_permutation_vector[j]][i]) > fabs(A[rows_permutation_vector[indexof_actual_max]][i])) {
+                indexof_actual_max = j;
+            }
+        }
+        if (fabs(A[rows_permutation_vector[indexof_actual_max]][i]) < eps) return 0;
+        if (indexof_actual_max != i) {
+            int helper = rows_permutation_vector[i];
+            rows_permutation_vector[i] = rows_permutation_vector[indexof_actual_max];
+            rows_permutation_vector[indexof_actual_max] = helper;
+            determinant *= -1;
+        }
+
+        double temp_multiplier = A[rows_permutation_vector[i]][i];
+        determinant *= temp_multiplier;
+        for (size_t j = 0; j < n; j++) {
+            A[rows_permutation_vector[i]][j] /= temp_multiplier;
+            temp_B[rows_permutation_vector[i]][j] /= temp_multiplier;
+        }
+        for (size_t j = i + 1; j < n; j++) {
+            double row_multiplier = A[rows_permutation_vector[j]][i] / A[rows_permutation_vector[i]][i];
+            for (size_t k = 0; k < n; k++) {
+                A[rows_permutation_vector[j]][k] -= A[rows_permutation_vector[i]][k] * row_multiplier;
+                temp_B[rows_permutation_vector[j]][k] -= temp_B[rows_permutation_vector[i]][k] * row_multiplier;
+            }
+        }
+
+    }
+    for (int i = n - 1; i >= 0; i--) {
+        for (int j = n - 1; j > i; j--) {
+            for (int k = 0; k < n; k++) {
+                temp_B[rows_permutation_vector[i]][k] -= temp_B[rows_permutation_vector[j]][k] * A[rows_permutation_vector[i]][j];
+            }
+        }
+    }
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            B[i][j] = temp_B[rows_permutation_vector[i]][j];
+        }
+    }
+    return determinant;
 }
 
 int main(void) {
