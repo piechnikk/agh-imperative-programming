@@ -35,8 +35,8 @@ void init_vector(Vector* vector, size_t block_size, size_t element_size) {
 // new storage is allocated, otherwise the function does nothing.
 void reserve(Vector* vector, size_t new_capacity) {
     if (new_capacity > (*vector).capacity) {
-        (*vector).data = realloc((*vector).data, (*vector).element_size * new_capacity);
-        (*vector).capacity = new_capacity;
+        (*vector).data = realloc((*vector).data, (*vector).element_size * (*vector).capacity * 2);
+        (*vector).capacity = (*vector).capacity * 2;
     }
 }
 
